@@ -1,10 +1,19 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <SDL.h>
 
 bool isRunning = false;
 
+SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+
+int windowWidth = 1280;
+int windowHeight = 800;
+
+uint32_t* colorBuffer = NULL;
+
+SDL_Texture* texture = NULL;
 
 bool InitializeWindow()
 {
@@ -14,7 +23,7 @@ bool InitializeWindow()
 		return false;
 	}
 
-	SDL_Window* window = SDL_CreateWindow("Tiny Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Tiny Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
 	if (!window)
 	{
 		fprintf(stderr, "Failed to create SDL Window");
@@ -29,6 +38,30 @@ bool InitializeWindow()
 	}
 
 	return true;
+}
+
+void Setup()
+{
+	colorBuffer = (uint32_t*)malloc(windowWidth * windowHeight * sizeof(uint32_t));
+
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, windowWidth, windowHeight);
+}
+
+void ClearColorBuffer(uint32_t color)
+{
+	for (int y = 0; y < windowHeight; y++)
+	{
+		for (int x = 0; x < windowWidth; x++)
+		{
+			colorBuffer[(y * windowWidth) + x] = color;
+		}
+	}
+}
+
+void RenderColorBuffer()
+{
+	SDL_UpdateTexture(texture, NULL, colorBuffer, (int)(windowWidth * sizeof(uint32_t)));
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
 }
 
 void ProcessInputs()
@@ -49,18 +82,34 @@ void Render()
 	SDL_SetRenderDrawColor(renderer, 218, 247, 166, 255);
 	SDL_RenderClear(renderer);
 
+	RenderColorBuffer();
+	ClearColorBuffer(0xFF1E1E1E);
+
 	SDL_RenderPresent(renderer);
 }
 
-int main()
+void Destroy()
+{
+	free(colorBuffer);
+
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+}
+
+int main(int argc, char* argv[])
 {
 	isRunning = InitializeWindow();
+
+	Setup();
 
 	while (isRunning)
 	{
 		ProcessInputs();
 		Render();
 	}
+
+	Destroy();
 
 	return 0;
 }
