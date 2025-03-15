@@ -64,6 +64,42 @@ void RenderColorBuffer()
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 }
 
+void DrawGrid(int gridSize)
+{
+	for (int y = 0; y < windowHeight; y++)
+	{
+		for (int x = 0; x < windowWidth; x++)
+		{
+			if (x % gridSize == 0 || y % gridSize == 0)
+			{
+				colorBuffer[(y * windowWidth) + x] = 0xFF999999;
+			}
+		}
+	}
+}
+
+void DrawDotGrid(int gridSize)
+{
+	for (int y = 0; y < windowHeight; y += gridSize)
+	{
+		for (int x = 0; x < windowWidth; x += gridSize)
+		{
+			colorBuffer[(y * windowWidth) + x] = 0xFF999999;
+		}
+	}
+}
+
+void DrawRect(int x, int y, int width, int height, uint32_t color)
+{
+	for (int i = y; i < (y + height); i++)
+	{
+		for (int j = x; j < (x + width); j++)
+		{
+			colorBuffer[(i * windowWidth) + j] = color;
+		}
+	}
+}
+
 void ProcessInputs()
 {
 	SDL_Event event;
@@ -81,6 +117,9 @@ void Render()
 {
 	SDL_SetRenderDrawColor(renderer, 218, 247, 166, 255);
 	SDL_RenderClear(renderer);
+
+	DrawDotGrid(10);
+	DrawRect(200, 200, 200, 100, 0xFF00FF00);
 
 	RenderColorBuffer();
 	ClearColorBuffer(0xFF1E1E1E);
