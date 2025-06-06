@@ -52,7 +52,15 @@ void RenderColorBuffer()
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 }
 
-void DrawGrid(int gridSize)
+void DrawPixel(int x, int y, uint32_t color)
+{
+	if ((x >= 0 && x <= windowWidth) && (y >= 0 && y <= windowHeight))
+	{
+		colorBuffer[(y * windowWidth) + x] = color;
+	}
+}
+
+void DrawGrid(int gridSize, uint32_t color)
 {
 	for (int y = 0; y < windowHeight; y++)
 	{
@@ -60,19 +68,19 @@ void DrawGrid(int gridSize)
 		{
 			if (x % gridSize == 0 || y % gridSize == 0)
 			{
-				colorBuffer[(y * windowWidth) + x] = 0xFF999999;
+				DrawPixel(x, y, color);
 			}
 		}
 	}
 }
 
-void DrawDotGrid(int gridSize)
+void DrawDotGrid(int gridSize, uint32_t color)
 {
 	for (int y = 0; y < windowHeight; y += gridSize)
 	{
 		for (int x = 0; x < windowWidth; x += gridSize)
 		{
-			colorBuffer[(y * windowWidth) + x] = 0xFF999999;
+			DrawPixel(x, y, color);
 		}
 	}
 }
@@ -83,7 +91,7 @@ void DrawRect(int x, int y, int width, int height, uint32_t color)
 	{
 		for (int j = x; j < (x + width); j++)
 		{
-			colorBuffer[(i * windowWidth) + j] = color;
+			DrawPixel(j, i, color);
 		}
 	}
 }

@@ -27,7 +27,7 @@ void Render()
 	SDL_SetRenderDrawColor(renderer, 218, 247, 166, 255);
 	SDL_RenderClear(renderer);
 
-	DrawDotGrid(10);
+	DrawDotGrid(10, 0xFF999999);
 	DrawRect(200, 200, 200, 100, 0xFF00FF00);
 
 	RenderColorBuffer();

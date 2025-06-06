@@ -20,8 +20,9 @@ extern SDL_Texture* texture;
 bool InitializeWindow();
 void ClearColorBuffer(uint32_t color);
 void RenderColorBuffer();
-void DrawGrid(int gridSize);
-void DrawDotGrid(int gridSize);
+void DrawPixel(int x, int y, uint32_t color);
+void DrawGrid(int gridSize, uint32_t color);
+void DrawDotGrid(int gridSize, uint32_t color);
 void DrawRect(int x, int y, int width, int height, uint32_t color);
 void Destroy();
 
