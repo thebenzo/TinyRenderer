@@ -5,14 +5,22 @@
 
 bool isRunning = false;
 
-float fov = 128.0f;
+float fov = 512.0f;
+
+Vector3f cameraPos = { 0.0f, 0.0f, -5.0f };
 
 Vector3f cubePoints[POINTS_COUNT];
 Vector2f projectedCubePoints[POINTS_COUNT];
 
-Vector2f OrthograhicProject(Vector3f point)
+Vector2f OrthograhicProjection(Vector3f point)
 {
 	Vector2f projectedPoint = { point.x * fov, point.y * fov};
+	return projectedPoint;
+}
+
+Vector2f PerspectiveProjection(Vector3f point)
+{
+	Vector2f projectedPoint = { (point.x * fov) / point.z, (point.y * fov) /point.z };
 	return projectedPoint;
 }
 
@@ -53,7 +61,10 @@ void Update()
 {
 	for (int i = 0; i < POINTS_COUNT; i++)
 	{
-		projectedCubePoints[i] = OrthograhicProject(cubePoints[i]);
+		Vector3f point = cubePoints[i];
+		point.z -= cameraPos.z;
+
+		projectedCubePoints[i] = PerspectiveProjection(point);
 	}
 }
 
