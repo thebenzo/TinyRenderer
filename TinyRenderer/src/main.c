@@ -7,7 +7,9 @@ bool isRunning = false;
 
 float fov = 512.0f;
 
-Vector3f cameraPos = { 0.0f, 0.0f, -5.0f };
+Vector3f cameraPos = { 0.0f, 0.0f, -4.0f };
+
+Vector3f rotation = { 0.0f, 0.0f, 0.0f };
 
 Vector3f cubePoints[POINTS_COUNT];
 Vector2f projectedCubePoints[POINTS_COUNT];
@@ -59,12 +61,21 @@ void ProcessInputs()
 
 void Update()
 {
+	rotation.x += 0.003f;
+	rotation.y += 0.003f;
+	rotation.z += 0.003f;
+
 	for (int i = 0; i < POINTS_COUNT; i++)
 	{
 		Vector3f point = cubePoints[i];
-		point.z -= cameraPos.z;
 
-		projectedCubePoints[i] = PerspectiveProjection(point);
+		Vector3f transformedPoint = RotateX(point, rotation.x);
+		transformedPoint = RotateY(transformedPoint, rotation.y);
+		transformedPoint = RotateZ(transformedPoint, rotation.z);
+
+		transformedPoint.z -= cameraPos.z;
+
+		projectedCubePoints[i] = PerspectiveProjection(transformedPoint);
 	}
 }
 

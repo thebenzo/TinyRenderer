@@ -14,4 +14,8 @@ typedef struct
 	float z;
 } Vector3f;
 
+Vector3f RotateX(Vector3f point, float angle);
+Vector3f RotateY(Vector3f point, float angle);
+Vector3f RotateZ(Vector3f point, float angle);
+
 #endif // !VECTOR_H
